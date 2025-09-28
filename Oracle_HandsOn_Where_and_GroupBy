@@ -1,0 +1,107 @@
+# 25 Questions on WHERE
+
+1. Find customers born after the year 1990.
+A) select * from sh.CUSTOMERS where CUST_YEAR_OF_BIRTH > 1990;
+2. List all male customers (`CUST_GENDER = 'M'`).
+A) select * from sh.customers where cust_gender='M';
+3. Retrieve all female customers (`CUST_GENDER = 'F'`) living in Sydney.
+A) select * from sh.customers where cust_gender='F' and cust_city='Sydney';
+4. Find customers with income level `"G: 130,000 - 149,999"`.
+A) select * from sh.CUSTOMERS G where G.CUST_INCOME_LEVEL = 'G: 130,000 - 149,999';
+5. Get all customers with a credit limit above 10,000.
+A) select * from sh.customers where cust_credit_limit > 10000;
+6. Retrieve customers from the state "California".
+A) select * from sh.customers where cust_state_province='California';
+7. Find customers who have provided an email address.
+A) select * from sh.CUSTOMERS where CUST_EMAIL is not null;
+8. List customers with missing marital status.
+A) select * from sh.CUSTOMERS where CUST_MARITAL_STATUS is null;
+9. Find customers whose postal code starts with "53".
+A) select * from sh.CUSTOMERS where CUST_POSTAL_CODE like '53%';
+10. Get customers born before 1980 with a credit limit above 5,000.
+A)  select * from sh.customers where CUST_YEAR_OF_BIRTH < '1980' and cust_credit_limit > '5000';
+11. Retrieve customers from Almere or Amersfoort.
+A)  select * from sh.CUSTOMERS where CUST_CITY in ('Almere' , 'Amersfoort')
+12. Find customers who do not have a credit limit.
+A) select * from sh.CUSTOMERS where CUST_CREDIT_LIMIT is null;
+13. List customers whose phone number starts with "487".
+A) select * from sh.customers where CUST_MAIN_PHONE_NUMBER like '487%';
+14. Find married customers with income level `"Medium"`.
+A) select * from sh.CUSTOMERS where CUST_MARITAL_STATUS='married' and CUST_INCOME_LEVEL='Medium';
+15. Get customers whose last name starts with "G".
+A) select * from sh.CUSTOMERS where CUST_LAST_NAME like 'G%';
+16. Find customers with city_id = 51057.
+A) select * from sh.CUSTOMERS where cust_city_id=51057;
+17. Retrieve all customers who are valid (`CUST_VALID = 'A'`).
+A) select * from sh.CUSTOMERS where CUST_VALID='A';
+18. Find customers whose effective start date (`CUST_EFF_FROM`) is after 2020.
+A) select * from sh.CUSTOMERS where CUST_EFF_FROM >= date '2020-01-01';
+19. Retrieve customers whose effective end date (`CUST_EFF_TO`) is before 2021.
+A) select * from sh.CUSTOMERS where CUST_EFF_TO < date '2021-01-01';
+20. Find customers with credit limit between 5,000 and 9,000.
+A) select * from sh.CUSTOMERS where CUST_CREDIT_LIMIT between 5000 and 9000;
+21. Get all customers from country_id = 101.
+A) select * from sh.CUSTOMERS where COUNTRY_ID = 101;
+22. Find customers whose email ends with `"@company.example.com"`.
+A) select * from sh.CUSTOMERS where CUST_EMAIL like '%@company.example.com';
+23. List customers with `CUST_TOTAL_ID = 52772`.
+A) select * from sh.CUSTOMERS where CUST_TOTAL_ID = 52772;
+24. Find customers with `CUST_SRC_ID` in (10, 20, 30).
+A) select * from sh.customers where CUST_SRC_ID in (10,20,30);
+25. Retrieve customers who either do not have email or do not have a credit limit.
+A) select * from sh.customers where CUST_CREDIT_LIMIT is null or CUST_EMAIL is null;
+
+---
+
+# 25 Questions on GROUP BY and HAVING
+
+26. Count the number of customers in each city.
+A) select cust_city, count(*) as num_of_customers from sh.customers group by cust_city having count(*)>0;
+27. Find cities with more than 100 customers.
+A) select cust_city, count(*) as num_of_customers from sh.customers group by cust_city having count(*)>100;
+28. Count the number of customers in each state.
+A) select cust_state_province, count(*) as num_of_customers from sh.customers group by cust_state_province having count(*)>1;
+29. Find states with fewer than 50 customers.
+A) select cust_state_province, count(*) as num_of_customers from sh.customers group by cust_state_province having count(*)<50;
+30. Calculate the average credit limit of customers in each city.
+A) select cust_city, avg(CUST_CREDIT_LIMIT) as average_credit_limit from sh.customers group by cust_city having count(*)>1;
+31. Find cities with average credit limit greater than 8,000.
+A) select cust_city, avg(CUST_CREDIT_LIMIT) as average_credit_limit from sh.customers group by cust_city having average_credit_limit > 8000;
+32. Count customers by marital status.
+A) select CUST_MARITAL_STATUS, count(*) from sh.customers group by CUST_MARITAL_STATUS having count(*) > 0;
+33. Find marital statuses with more than 200 customers.
+A) select CUST_MARITAL_STATUS, count(*) from sh.customers group by CUST_MARITAL_STATUS having count(*) > 200;
+34. Calculate the average year of birth grouped by gender.
+A) select avg(CUST_YEAR_OF_BIRTH), CUST_GENDER from sh.customers group by CUST_GENDER having count(*);
+35. Find genders with average year of birth after 1990.
+A) select CUST_GENDER , avg(CUST_YEAR_OF_BIRTH) as average_year_of_birth from sh.customers group by CUST_GENDER having average_year_of_birth > 1990;
+36. Count the number of customers in each country.
+A) select COUNTRY_ID, count(*) as no_of_customers from sh.CUSTOMERS group by COUNTRY_ID having COUNT(*);
+37. Find countries with more than 1,000 customers.
+A) select COUNTRY_ID, count(*) as no_of_customers from sh.CUSTOMERS group by COUNTRY_ID having COUNT(*)>1000;
+38. Calculate the total credit limit per state.
+A) select cust_state_province , sum(CUST_CREDIT_LIMIT) as total_credit_lmt_per_state from sh.CUSTOMERS group by CUST_STATE_PROVINCE having count(*);
+39. Find states where the total credit limit exceeds 100,000.
+A) select cust_state_province , sum(CUST_CREDIT_LIMIT) as total_credit_lmt_per_state from sh.CUSTOMERS group by CUST_STATE_PROVINCE having total_credit_lmt_per_state > 100000;
+40. Find the maximum credit limit for each income level.
+A) select CUST_INCOME_LEVEL , max(CUST_CREDIT_LIMIT) as max_credit_lmt_each_income_lvl from sh.CUSTOMERS group by CUST_INCOME_LEVEL having count(*);
+41. Find income levels where the maximum credit limit is greater than 15,000.
+A) select CUST_INCOME_LEVEL , max(CUST_CREDIT_LIMIT) as max_credit_lmt_each_income_lvl from sh.CUSTOMERS group by CUST_INCOME_LEVEL having max_credit_lmt_each_income_lvl>15000;
+42. Count customers by year of birth.
+A) select CUST_YEAR_OF_BIRTH, count(*) from sh.CUSTOMERS group by CUST_YEAR_OF_BIRTH having count(*);
+43. Find years of birth with more than 50 customers.
+A) select CUST_YEAR_OF_BIRTH, count(*) from sh.CUSTOMERS group by CUST_YEAR_OF_BIRTH having count(*)>50;
+44. Calculate the average credit limit per marital status.
+A) select CUST_MARITAL_STATUS, avg(cust_credit_limit) from sh.CUSTOMERS group by CUST_MARITAL_STATUS having count(*);
+45. Find marital statuses with average credit limit less than 5,000.
+A) select CUST_MARITAL_STATUS, avg(cust_credit_limit) as avg_credit_limit from sh.CUSTOMERS group by CUST_MARITAL_STATUS having avg_credit_limit <5000;
+46. Count the number of customers by email domain (e.g., `company.example.com`).
+A) select CUST_EMAIL, count(*) from sh.CUSTOMERS group by CUST_EMAIL having count(*);
+47. Find email domains with more than 300 customers.
+A) select CUST_EMAIL, count(*) from sh.CUSTOMERS group by CUST_EMAIL having count(*)>300;
+48. Calculate the average credit limit by validity (`CUST_VALID`).
+A) select CUST_VALID, avg(cust_credit_limit) as avg_cust_credit_limit from sh.CUSTOMERS group by CUST_VALID having avg_cust_credit_limit;
+49. Find validity groups where the average credit limit is greater than 7,000.
+A) select CUST_VALID, avg(cust_credit_limit) as avg_cust_credit_limit from sh.CUSTOMERS group by CUST_VALID having avg_cust_credit_limit > 7000;
+50. Count the number of customers per state and city combination where there are more than 50 customers.
+A) select CUST_STATE_PROVINCE, CUST_CITY,count(*) as no_customers from sh.CUSTOMERS group by CUST_STATE_PROVINCE, CUST_CITY having no_customers > 50;
